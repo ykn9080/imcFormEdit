@@ -1,7 +1,9 @@
 {
-  "name": "imcformbuilder1",
-  "version": "0.1.0",
-  "private": true,
+  "name": "imcformbuilder",
+  "version": "0.1.12",
+  "module": "dist/Form/AntFormDisplay.js",
+  "main": "dist/Form/AntFormDisplay.js",
+  "private": false,
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
     "@emotion/react": "^11.4.0",
@@ -12,9 +14,6 @@
     "@material-ui/core": "^4.12.1",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
     "antd": "^4.16.7",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.2",
@@ -34,23 +33,28 @@
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "react-sortable-tree": "^2.8.0",
     "stringquery": "^1.0.8",
     "sweetalert2": "^11.0.18",
     "use-force-update": "^1.0.7",
     "uuid": "^8.3.2",
     "web-vitals": "^1.0.1"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
+    ]
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "publish:npm": "rm -rf dist && mkdir dist && babel src -d dist --copy-files"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-react"
     ]
   },
   "browserslist": {
@@ -64,5 +68,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@babel/preset-react": "^7.10.4"
   }
 }

@@ -1,7 +1,7 @@
 import _ from "lodash";
 import axios from "axios";
-import { currentsetting } from "config/index.js";
-import { pick } from "components/functions/LodashUtil";
+import { currentsetting } from "../config/index.js";
+import { pick } from "../components/functions/LodashUtil";
 
 export const makeBtnArray = (list) => {
   //if already has btnArr, pass

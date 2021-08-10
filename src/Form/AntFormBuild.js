@@ -453,8 +453,8 @@ const AntFormBuild = (props) => {
       <DialogFull
         open={open}
         title="Element Edit"
-        maxWidth="lg"
-        fullWidth={true}
+        // maxWidth="lg"
+        fullWidth={false}
       >
         <ElementInput onUpdate={onUpdate} />
       </DialogFull>

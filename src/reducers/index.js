@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { globalVar } from "config";
+import { globalVar } from "./config";
 
 const counterReducer = (state = 0, action) => {
   switch (action.type) {

@@ -3,13 +3,13 @@ import { useSelector } from "react-redux";
 import $ from "jquery";
 import _ from "lodash";
 import "antd/dist/antd.css";
-import "components/Common/Antd.css";
+import "../components/Common/Antd.css";
 import axios from "axios";
-import { currentsetting } from "config/index.js";
+import { currentsetting } from "../config/index.js";
 import { Form, Row, Typography, Spin } from "antd";
 import AntFormElement from "./AntFormElement";
 import { makeBtnArray } from "./AntFormDbOption";
-import { localHandle } from "components/functions/LodashUtil";
+import { localHandle } from "../components/functions/LodashUtil";
 
 const { Title, Paragraph } = Typography;
 

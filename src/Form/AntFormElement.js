@@ -1,10 +1,10 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { globalVariable } from "actions";
+import { globalVariable } from "../actions";
 import _ from "lodash";
 import "antd/dist/antd.css";
-import "components/Common/Antd.css";
+import "../components/Common/Antd.css";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   EditOutlined,
@@ -34,12 +34,12 @@ import {
   Divider,
   Typography,
 } from "antd";
-import IconBtn from "components/Common/IconButton";
+import IconBtn from "../components/Common/IconButton";
 import { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
 import "rc-color-picker/assets/index.css";
-import Sketcher from "components/Color/Sketch.js";
-import { pickuniq } from "components/functions/LodashUtil";
+import Sketcher from "../components/Color/Sketch.js";
+import { pickuniq } from "../components/functions/LodashUtil";
 
 const { MonthPicker, RangePicker } = DatePicker;
 const { Option, OptGroup } = Select;
