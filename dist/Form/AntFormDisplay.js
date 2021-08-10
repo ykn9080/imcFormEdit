@@ -356,7 +356,7 @@ exports.shouldUpdateCheck = shouldUpdateCheck;
 const AntFormDisplay = props => {
   var _props$formArray3, _props$formArray3$set;
 
-  let showall = (0, _reactRedux.useSelector)(state => state.global.showall); //edit
+  let showall = false; //useSelector((state) => state.global.showall); //edit
 
   const [formArray, setFormArray] = (0, _react.useState)();
   const [formSummary, setFormSummary] = (0, _react.useState)(null);
@@ -688,7 +688,7 @@ const AntFormDisplay = props => {
     size: fset.size
   }), elem), /*#__PURE__*/_react.default.createElement(_antd2.Spin, {
     spinning: loading
-  }));
+  }), /*#__PURE__*/_react.default.createElement("h3", null, "hello"));
 };
 
 var _default = AntFormDisplay;

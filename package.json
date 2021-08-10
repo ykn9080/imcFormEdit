@@ -1,6 +1,6 @@
 {
   "name": "imcformbuilder",
-  "version": "0.1.12",
+  "version": "0.1.14",
   "module": "dist/Form/AntFormDisplay.js",
   "main": "dist/Form/AntFormDisplay.js",
   "private": false,

@@ -257,7 +257,7 @@ export const shouldUpdateCheck = (list, k) => {
   else return null;
 };
 const AntFormDisplay = (props) => {
-  let showall = useSelector((state) => state.global.showall); //edit
+  let showall = false; //useSelector((state) => state.global.showall); //edit
   const [formArray, setFormArray] = useState();
   const [formSummary, setFormSummary] = useState(null);
   const [loading] = useState(false);
@@ -593,6 +593,7 @@ const AntFormDisplay = (props) => {
         </Form>
       )}
       <Spin spinning={loading} />
+      <h3>hello</h3>
     </>
   );
 };
