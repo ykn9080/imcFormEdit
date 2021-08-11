@@ -6,7 +6,6 @@ import App from "./App";
 import { createStore } from "redux";
 import allReducer from "./reducers";
 import { Provider } from "react-redux";
-import AntFormDisplay from "./Form/AntFormDisplay";
 
 const store = createStore(
   allReducer,

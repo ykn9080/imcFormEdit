@@ -1,9 +1,8 @@
 {
   "name": "imcformbuilder",
   "version": "0.1.14",
-  "module": "dist/Form/AntFormDisplay.js",
-  "main": "dist/Form/AntFormDisplay.js",
-  "private": false,
+  "main": "index.js",
+  "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
     "@emotion/react": "^11.4.0",
@@ -50,13 +49,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "publish:npm": "rm -rf dist && mkdir dist && babel src -d dist --copy-files"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-react"
-    ]
+    "eject": "react-scripts eject"
   },
   "browserslist": {
     "production": [

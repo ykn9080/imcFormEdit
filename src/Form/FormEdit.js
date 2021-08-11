@@ -44,7 +44,6 @@ const FormEdit = (props) => {
         },
         layout: "horizontal",
         formColumn: 1,
-        type: "",
         size: "middle",
         lineheight: "middle",
       },

@@ -1,0 +1,8 @@
+# ignoring node_modules causes error with react scripts
+# node_modules
+# dist
+
+**/bin
+**/obj
+**/node_modules
+.git

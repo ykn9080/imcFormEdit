@@ -1,0 +1,16 @@
+version: "3.4"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: imcreactform
+    image: yknam/imcreactform
+    environment:
+      - NODE_ENV=production
+    command: npm start
+    ports:
+      - 3080:80
+    volumes:
+      - .:/app
