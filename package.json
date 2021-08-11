@@ -33,6 +33,7 @@
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-sortable-tree": "^2.8.0",
     "stringquery": "^1.0.8",
     "sweetalert2": "^11.0.18",
     "use-force-update": "^1.0.7",

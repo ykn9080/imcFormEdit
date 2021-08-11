@@ -1,12 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
-// import App from "./App";
+// import "./index.css";
+import App from "./App";
 //import * as serviceWorker from "./serviceWorker";
 import { createStore } from "redux";
 import allReducer from "./reducers";
 import { Provider } from "react-redux";
-import AntFormDisplay from "../Form/AntFormDisplay";
+import AntFormDisplay from "./Form/AntFormDisplay";
 
 const store = createStore(
   allReducer,
@@ -15,7 +15,7 @@ const store = createStore(
 
 ReactDOM.render(
   <Provider store={store}>
-    <AntFormDisplay />
+    <App />
   </Provider>,
   document.getElementById("root")
 );

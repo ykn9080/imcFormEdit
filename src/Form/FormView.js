@@ -26,7 +26,8 @@ const FormView = (props) => {
   let formdt = useSelector((state) => state.global.currentData);
   let selectedKey = useSelector((state) => state.global.selectedKey);
 
-  if (query.rtn) history.push("/admin/control/form/formedit");
+  //if (query.rtn) history.push("/admin/control/form/formedit");
+  if (query.rtn) history.push("/");
   useEffect(() => {
     dispatch(globalVariable({ helpLink: null }));
     dispatch(globalVariable({ selectedKey: formdt._id }));

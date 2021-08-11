@@ -231,9 +231,9 @@ const Admin = ({ match }) => {
   useEffect(() => {}, []);
   return (
     <>
-      <DenseAppBar title={"Admin"}>
+      {/* <DenseAppBar title={"Admin"}>
         <AntMenu menuList={adminMenu} />
-      </DenseAppBar>
+      </DenseAppBar> */}
       {/* formview, formedit은 독립적인 pagehead를 가짐 */}
       {["formview", "formedit", "form"].indexOf(title) === -1 ? (
         <PageHead title={titleUpper} />

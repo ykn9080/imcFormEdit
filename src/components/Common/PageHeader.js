@@ -1,7 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { PageHeader, Row, Col } from "antd";
-import AntBreadCrumb from "./BreadCrumb";
 
 const PageHead = (props) => {
   const history = useHistory();
@@ -65,9 +64,7 @@ const PageHead = (props) => {
   /* #endregion */
   return (
     <>
-      <div style={{ paddingLeft: 25, paddingTop: 5 }}>
-        <AntBreadCrumb />
-      </div>
+      <div style={{ paddingLeft: 25, paddingTop: 5 }}></div>
       <PageHeader {...pageProps}>
         {props.content ? <>{child}</> : props.children}
       </PageHeader>

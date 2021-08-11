@@ -59,7 +59,7 @@ const FormEdit = (props) => {
     dispatch(globalVariable({ currentData: formdt }));
   }
   let selectedKey = useSelector((state) => state.global.selectedKey);
-  if (!selectedKey) history.push("/admin/control/form");
+  //if (!selectedKey) history.push("/admin/control/form");
   if (selectedKey === "imsi") selectedKey = "";
   //리로드 귀찮아서 해둰거 개발완료시 지울것!!!!!!!!!!!!!!!!!
   // if (formdt === "") {
@@ -114,28 +114,28 @@ const FormEdit = (props) => {
     },
 
     list: [
-      { label: "Id", name: "id", type: "input", seq: -1, disabled: true },
-      { label: "Title", name: "name", type: "input", seq: 0 },
-      {
-        label: "Desc",
-        name: "desc",
-        type: "input.textarea",
-        seq: 1,
-      },
-      {
-        label: "Type",
-        name: "type",
-        type: "select",
-        defaultValue: 1,
-        optionArray: [
-          { text: "Embed", value: "embed" },
-          { text: "Paramter", value: "parameter" },
-          { text: "Type1", value: "type1" },
-          { text: "Type2", value: "type2" },
-          { text: "Others", value: "others" },
-        ],
-        seq: 2,
-      },
+      // { label: "Id", name: "id", type: "input", seq: -1, disabled: true },
+      // { label: "Title", name: "name", type: "input", seq: 0 },
+      // {
+      //   label: "Desc",
+      //   name: "desc",
+      //   type: "input.textarea",
+      //   seq: 1,
+      // },
+      // {
+      //   label: "Type",
+      //   name: "type",
+      //   type: "select",
+      //   defaultValue: 1,
+      //   optionArray: [
+      //     { text: "Embed", value: "embed" },
+      //     { text: "Paramter", value: "parameter" },
+      //     { text: "Type1", value: "type1" },
+      //     { text: "Type2", value: "type2" },
+      //     { text: "Others", value: "others" },
+      //   ],
+      //   seq: 2,
+      // },
       {
         label: "Column",
         name: "column",
@@ -213,10 +213,10 @@ const FormEdit = (props) => {
 
   let updateInitialValues = (summaryData, formdt) => {
     const initialValue = {
-      id: formdt._id,
-      name: formdt.name,
-      desc: formdt.desc,
-      type: formdt.data.setting.type,
+      // id: formdt._id,
+      // name: formdt.name,
+      // desc: formdt.desc,
+      // type: formdt.data.setting.type,
       column: formdt.data.setting.formColumn,
       labelwidth: formdt.data.setting.formItemLayout.labelCol.span,
       layout: formdt.data.setting.layout,
@@ -418,7 +418,7 @@ const FormEdit = (props) => {
   return (
     <>
       <div className="site-page-header-ghost-wrapper">
-        <PageHead title="FormEdit" onBack={true} extra={extra} ghost={false}>
+        <PageHead title="FormEdit" extra={extra} ghost={false}>
           <AntFormDisplay
             formArray={sumdt}
             name={"fsummary"}
