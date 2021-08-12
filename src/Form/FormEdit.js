@@ -230,7 +230,22 @@ const FormEdit = (props) => {
     summaryData = updateInitialValues(summaryData, formdt);
   }
   const [sumdt, setSumdt] = useState(summaryData);
-
+  useEffect(() => {
+    window.addEventListener("message", (event) => {
+      // IMPORTANT: check the origin of the data!
+      if (event.origin.startsWith("http://localhost:3000")) {
+        // The data was sent from your site.
+        // Data sent with postMessage is stored in event.data:
+        console.log(JSON.parse(event.data));
+        setSumdt(JSON.parse(event.data));
+      } else {
+        // The data was NOT sent from your site!
+        // Be careful! Do not use it. This else branch is
+        // here just for clarity, you usually shouldn't need it.
+        return;
+      }
+    });
+  }, []);
   useEffect(() => {
     dispatch(globalVariable({ formEdit: true }));
     //temporary use for editing phase only for
@@ -247,6 +262,7 @@ const FormEdit = (props) => {
     };
 
     setSumdt(updateInitialValues(sumdt, formdt));
+    console.log(sumdt, formdt, updateInitialValues(sumdt, formdt));
     if (formdt._id) setUpdate(true);
   }, [formdt]);
 
@@ -428,7 +444,15 @@ const FormEdit = (props) => {
       <div style={{ margin: 10 }}>
         <AntFormBuild formdt={formdt} reload={onReload} />
       </div>
-      <Button onClick={() => console.log(update)}>update</Button>
+      <Button
+        onClick={() => {
+          var data = "data from iframe";
+          //window.parent.receiveDataFromIFrame(data);
+          window.parent.postMessage("sent message from child.html", "*"); // '*' on any domain
+        }}
+      >
+        update
+      </Button>
       {snack}
     </>
   );

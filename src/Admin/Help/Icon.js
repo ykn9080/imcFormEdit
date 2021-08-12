@@ -7,7 +7,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import IconButton1 from "components/Common/IconButton1";
-import Help from "Admin/Help";
+
 import Dialog from "@material-ui/core/Dialog";
 import Slide from "@material-ui/core/Slide";
 import CloseIcon from "@material-ui/icons/Close";
@@ -83,7 +83,6 @@ const Helpdialog = () => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Help />
     </Dialog>
   );
 };
