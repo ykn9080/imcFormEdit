@@ -237,7 +237,7 @@ const FormEdit = (props) => {
         // The data was sent from your site.
         // Data sent with postMessage is stored in event.data:
         console.log(JSON.parse(event.data));
-        setSumdt(JSON.parse(event.data));
+        dispatch(globalVariable({ currentData: JSON.parse(event.data) }));
       } else {
         // The data was NOT sent from your site!
         // Be careful! Do not use it. This else branch is
