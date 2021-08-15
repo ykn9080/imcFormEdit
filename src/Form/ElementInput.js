@@ -395,7 +395,7 @@ const ElementInput = (props) => {
   const summaryListbyType = (summaryData, type) => {
     switch (type) {
       default:
-        return;
+        break;
       case "select":
       case "select.multiple":
       case "radio.button":
@@ -643,7 +643,6 @@ const ElementInput = (props) => {
       return null;
     });
     if (!isExist) currentData.data.list.push(view);
-    console.log(currentData);
     props.onUpdate(currentData.data);
     //dispatch(globalVariable({ currentData }));
   };

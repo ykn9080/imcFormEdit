@@ -90,8 +90,8 @@ const FormEdit = (props) => {
       //   }
       // },
       onValuesChange: (changedValues, allValues) => {
-        formdt.name = allValues.name;
-        formdt.desc = allValues.desc;
+        // formdt.name = allValues.name;
+        // formdt.desc = allValues.desc;
         let sett = formdt.data.setting;
         sett.formItemLayout.labelCol.span = allValues.labelwidth;
         sett.formItemLayout.wrapperCol.span = 24 - allValues.labelwidth;
@@ -101,8 +101,8 @@ const FormEdit = (props) => {
         sett.size = allValues.size;
         sett.lineheight = allValues.lineheight;
         dispatch(globalVariable({ currentData: formdt }));
-        if (["name", "desc"].indexOf(Object.keys(changedValues)[0]) === -1)
-          forceUpdate();
+        //if (["name", "desc"].indexOf(Object.keys(changedValues)[0]) === -1)
+        //forceUpdate();
       },
       onFinish: (values) => {
         console.log("Received values of form: ", values);
@@ -216,7 +216,7 @@ const FormEdit = (props) => {
       // name: formdt.name,
       // desc: formdt.desc,
       // type: formdt.data.setting.type,
-      column: formdt.data.setting.formColumn,
+      column: formdt.data?.setting?.formColumn,
       labelwidth: formdt.data.setting.formItemLayout.labelCol.span,
       layout: formdt.data.setting.layout,
       size: formdt.data.setting.size,
@@ -233,11 +233,22 @@ const FormEdit = (props) => {
   useEffect(() => {
     window.addEventListener("message", (event) => {
       // IMPORTANT: check the origin of the data!
+
       if (event.origin.startsWith("http://localhost:3000")) {
         // The data was sent from your site.
         // Data sent with postMessage is stored in event.data:
-        console.log(JSON.parse(event.data));
-        dispatch(globalVariable({ currentData: JSON.parse(event.data) }));
+
+        const set = event.data.data.setting;
+        const init = {
+          column: set.formColumn,
+          labelwidth: set.formItemLayout.labelCol.span,
+          layout: set.layout,
+          size: set.size,
+          lineheight: set.lineheight,
+        };
+        event.data.data.setting.initialValues = init;
+
+        dispatch(globalVariable({ currentData: event.data }));
       } else {
         // The data was NOT sent from your site!
         // Be careful! Do not use it. This else branch is
@@ -262,7 +273,6 @@ const FormEdit = (props) => {
     };
 
     setSumdt(updateInitialValues(sumdt, formdt));
-    console.log(sumdt, formdt, updateInitialValues(sumdt, formdt));
     if (formdt._id) setUpdate(true);
   }, [formdt]);
 
@@ -434,11 +444,7 @@ const FormEdit = (props) => {
     <>
       <div className="site-page-header-ghost-wrapper">
         <PageHead title="FormEdit" extra={extra} ghost={false}>
-          <AntFormDisplay
-            formArray={sumdt}
-            name={"fsummary"}
-            //initialValues={fsummaryInit}
-          />
+          <AntFormDisplay formArray={sumdt} name={"fsummary"} />
         </PageHead>
       </div>
       <div style={{ margin: 10 }}>
@@ -448,7 +454,7 @@ const FormEdit = (props) => {
         onClick={() => {
           var data = "data from iframe";
           //window.parent.receiveDataFromIFrame(data);
-          window.parent.postMessage("sent message from child.html", "*"); // '*' on any domain
+          window.parent.postMessage(JSON.stringify(formdt), "*"); // '*' on any domain
         }}
       >
         update

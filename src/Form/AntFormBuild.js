@@ -421,7 +421,6 @@ const AntFormBuild = (props) => {
     setFormArray(val);
     props.reload();
   };
-  console.log(props, formArray);
   return (
     <div className={classes.root}>
       <Tabs defaultActiveKey="1">
