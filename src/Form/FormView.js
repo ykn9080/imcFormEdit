@@ -96,7 +96,7 @@ const FormView = (props) => {
     { term: "Column", detail: sum?.formColumn },
     { term: "Size", detail: sum?.size },
     { term: "Layout", detail: sum?.layout },
-    { term: "LabelWidth", detail: sum?.formItemLayout.labelCol.span },
+    { term: "LabelWidth", detail: sum?.formItemLayout?.labelCol?.span | 2 },
     { term: "Description", detail: sum?.desc, span: 24 },
   ];
   const onValuesChange = (changedValues, allValues) => {

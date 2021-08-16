@@ -124,8 +124,9 @@ const AntFormBuild = (props) => {
     //st>ed -> st prev +1 st->ed
   };
   useEffect(() => {
+    if(props.formdt.data)
     setFormArray(props.formdt.data);
-  }, [props.formdt.data.list, open]);
+  }, [props.formdt.data?.list, open]);
 
   useEffect(() => {
     dispatch(globalVariable({ formEdit: true }));

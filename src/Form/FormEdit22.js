@@ -10,7 +10,7 @@ import { DesktopOutlined, SaveOutlined, CopyOutlined } from "@ant-design/icons";
 import PageHead from "components/Common/PageHeader";
 import AntFormBuild from "Form/AntFormBuild";
 import AntFormDisplay from "Form/AntFormDisplay";
-import _ from "lodash"
+
 import "components/Common/Antd.css";
 import useForceUpdate from "use-force-update";
 import Snackbar from "@material-ui/core/Snackbar";
@@ -44,6 +44,7 @@ const FormEdit = (props) => {
         },
         layout: "horizontal",
         formColumn: 1,
+        type: "",
         size: "middle",
         lineheight: "middle",
       },
@@ -51,47 +52,58 @@ const FormEdit = (props) => {
     },
   };
 
-  let newFormData = useSelector((state) => state.global.currentData);
-console.log(newFormData)
+  let formdt = useSelector((state) => state.global.currentData);
 
+  if (formdt === "") {
+    formdt = formdt1;
+    dispatch(globalVariable({ currentData: formdt }));
+  }
   let selectedKey = useSelector((state) => state.global.selectedKey);
-  //if (!selectedKey) history.push("/admin/control/form");
+  if (!selectedKey) history.push("/admin/control/form");
   if (selectedKey === "imsi") selectedKey = "";
-
+  //리로드 귀찮아서 해둰거 개발완료시 지울것!!!!!!!!!!!!!!!!!
+  // if (formdt === "") {
+  //   formdt = JSON.parse(localStorage.getItem("imsi"));
+  //   dispatch(globalVariable({ currentData: formdt }));
+  // }
   let initialValue = {};
 
-  let currFormData = {
+  let summaryData = {
     setting: {
       formItemLayout: {
         labelCol: { span: 4 },
         wrapperCol: { span: 20 },
       },
       layout: "horizontal",
+      type: "embed",
       formColumn: 2,
       size: "middle",
       lineheight: "middle",
       initialValues: {
         ...{ initialValue },
       },
-
+      // onFieldsChange: (changedFields, allFields) => {
+      //   const cf1 = changedFields[0];
+      //   if (["title", "desc"].indexOf(cf1.name[0]) === -1) {
+      //     formdt[cf1.name[0]] = cf1.value;
+      //     dispatch(globalVariable({ currentData: formdt }));
+      //     console.log("field", changedFields, allFields);
+      //   }
+      // },
       onValuesChange: (changedValues, allValues) => {
-        if(newFormData){
-        let sett = newFormData?.data?.setting;
-        if(!sett) sett={};
-        if(!sett.formItemLayout) sett={...sett, formItemLayout:{labelCol:{span:""},wrapperCol:{span:""}}};
-        sett={...sett, formItemLayout:{labelCol:{span:allValues.labelwidth},wrapperCol:{span: 24 - allValues.labelwidth}}};
-         sett.formColumn = allValues.column;
+        formdt.name = allValues.name;
+        formdt.desc = allValues.desc;
+        let sett = formdt.data.setting;
+        sett.formItemLayout.labelCol.span = allValues.labelwidth;
+        sett.formItemLayout.wrapperCol.span = 24 - allValues.labelwidth;
+        sett.type = allValues.type;
+        sett.formColumn = allValues.column;
         sett.layout = allValues.layout;
         sett.size = allValues.size;
         sett.lineheight = allValues.lineheight;
-
-         }
-        console.log(newFormData)
-       
-      //  dispatch(globalVariable({ currentData: newFormDt }));
-        
-        //if (["name", "desc"].indexOf(Object.keys(changedValues)[0]) === -1)
-        //forceUpdate();
+        dispatch(globalVariable({ currentData: formdt }));
+        if (["name", "desc"].indexOf(Object.keys(changedValues)[0]) === -1)
+          forceUpdate();
       },
       onFinish: (values) => {
         console.log("Received values of form: ", values);
@@ -102,6 +114,28 @@ console.log(newFormData)
     },
 
     list: [
+      { label: "Id", name: "id", type: "input", seq: -1, disabled: true },
+      { label: "Title", name: "name", type: "input", seq: 0 },
+      {
+        label: "Desc",
+        name: "desc",
+        type: "input.textarea",
+        seq: 1,
+      },
+      {
+        label: "Type",
+        name: "type",
+        type: "select",
+        defaultValue: 1,
+        optionArray: [
+          { text: "Embed", value: "embed" },
+          { text: "Paramter", value: "parameter" },
+          { text: "Type1", value: "type1" },
+          { text: "Type2", value: "type2" },
+          { text: "Others", value: "others" },
+        ],
+        seq: 2,
+      },
       {
         label: "Column",
         name: "column",
@@ -177,30 +211,27 @@ console.log(newFormData)
     ],
   };
 
-  let updateInitialValues = (currFormData, newFormData) => {
-    if(!currFormData)return
+  let updateInitialValues = (summaryData, formdt) => {
     const initialValue = {
-      column: newFormData.data?.setting?.formColumn,
-      labelwidth: newFormData.data?.setting?.formItemLayout?.labelCol?.span |2,
-      layout: newFormData.data?.setting.layout,
-      size: newFormData.data?.setting.size,
-      lineheight: newFormData.data?.setting.lineheight,
+      id: formdt._id,
+      name: formdt.name,
+      desc: formdt.desc,
+      type: formdt.data.setting.type,
+      column: formdt.data.setting.formColumn,
+      labelwidth: formdt.data.setting.formItemLayout.labelCol.span,
+      layout: formdt.data.setting.layout,
+      size: formdt.data.setting.size,
+      lineheight: formdt.data.setting.lineheight,
     };
 
-    currFormData.setting.initialValues = initialValue;
-    return currFormData;
+    summaryData.setting.initialValues = initialValue;
+    return summaryData;
   };
-
-  const [sumdt, setSumdt] = useState();
-  useEffect(() => {
-    
-  if (newFormData === "") {
-    dispatch(globalVariable({ currentData: formdt1 }));
+  if (formdt !== "") {
+    summaryData = updateInitialValues(summaryData, formdt);
   }
-  else {
-    const newcurrFormData = updateInitialValues(currFormData, newFormData);
-    setSumdt(newcurrFormData)
-  }
+  const [sumdt, setSumdt] = useState(summaryData);
+useEffect(() => {
     window.addEventListener("message", (event) => {
       // IMPORTANT: check the origin of the data!
 
@@ -208,53 +239,40 @@ console.log(newFormData)
         // The data was sent from your site.
         // Data sent with postMessage is stored in event.data:
 
-        let set = event.data.data.setting;
+        const set = event.data.data.setting;
         const init = {
           column: set.formColumn,
-          labelwidth: set.formItemLayout?.labelCol?.span | 2,
+          labelwidth: set.formItemLayout.labelCol.span,
           layout: set.layout,
           size: set.size,
           lineheight: set.lineheight,
         };
         event.data.data.setting.initialValues = init;
-        if(!set.formItemLayout){
-          set={...set, formItemLayout:{labelCol:{span:2},wrapperCol:{span: 22}}};
-        }
+console.log("newformdata가 iframe을 통해 전달됨")
         dispatch(globalVariable({ currentData: event.data })); 
-      } else {
-        // The data was NOT sent from your site!
-        // Be careful! Do not use it. This else branch is
-        // here just for clarity, you usually shouldn't need it.
-        return;
-      }
+      } 
     });
   }, []);
   useEffect(() => {
-  //   console.log("newformdata가 달라졌으니 한번더",newFormData)
-  //   //dispatch(globalVariable({ formEdit: true }));
-  //   //temporary use for editing phase only for
-  //   //initialValue setting, pls delete when save
-  //   // newFormData.data.setting = {
-  //   //   ...newFormData.data.setting,
-  //   //   onValuesChange: (changedValues, allValues) => {
-  //   //     newFormData.data.setting.initialValues = {
-  //   //       ...newFormData.data.setting.initialValues,
-  //   //       ...changedValues,
-  //   //     };
-  //   //     dispatch(globalVariable({ currentData: newFormData }));
-  //   //   },
-  //   // };
-console.log(_.cloneDeep(newFormData))
+    dispatch(globalVariable({ formEdit: true }));
+    //temporary use for editing phase only for
+    //initialValue setting, pls delete when save
+    formdt.data.setting = {
+      ...formdt.data.setting,
+      onValuesChange: (changedValues, allValues) => {
+        formdt.data.setting.initialValues = {
+          ...formdt.data.setting.initialValues,
+          ...changedValues,
+        };
+        dispatch(globalVariable({ currentData: formdt }));
+      },
+    };
 
- let sumdt1=sumdt;
-if(newFormData!=="")
-   
-    if(!sumdt1)sumdt1=currFormData;
-   setSumdt(updateInitialValues(sumdt1, newFormData));
-  //   //if (newFormData._id) setUpdate(true);
-   }, [newFormData]);
+    setSumdt(updateInitialValues(sumdt, formdt));
+    if (formdt._id) setUpdate(true);
+  }, [formdt]);
 
-  if (typeof newFormData._id === "undefined") {
+  if (typeof formdt._id === "undefined") {
     // iconSpin = { spin: true };
     btnDisabled = { disabled: true };
   }
@@ -297,18 +315,18 @@ if(newFormData!=="")
           // //remove onValuesChange
           //inorderto set initialValues, append onValuesChange eventhandler
           //must remove onValuesChange when to save to database
-          delete newFormData.data.setting.onValuesChange;
+          delete formdt.data.setting.onValuesChange;
           //cleanup list
-          const list = cleanuplist(newFormData.data.list);
-          newFormData.data.list = list;
-          newFormData.type = "form";
-          let formid = newFormData._id;
+          const list = cleanuplist(formdt.data.list);
+          formdt.data.list = list;
+          formdt.type = "form";
+          let formid = formdt._id;
           if (idcode) formid = idcode;
           let config;
           config = {
             method: "put",
             url: `${currentsetting.webserviceprefix}bootform/${formid}`,
-            data: newFormData,
+            data: formdt,
           };
 
           //fsummaryInit ? (config = configput) : (config = configpost);
@@ -316,9 +334,9 @@ if(newFormData!=="")
           //   : {
           //       method: "post",
           //       url: `${currentsetting.webserviceprefix}bootform`,
-          //       data: newFormData,
+          //       data: formdt,
           //     };
-          if (typeof newFormData._id === "undefined" && update === false)
+          if (typeof formdt._id === "undefined" && update === false)
             config = {
               ...config,
               ...{
@@ -355,7 +373,7 @@ if(newFormData!=="")
         icon={<CopyOutlined />}
         onClick={() => {
           //remove onValuesChange
-          let curr = cloneDeep(newFormData);
+          let curr = cloneDeep(formdt);
           delete curr.data.setting.onValuesChange;
           delete curr._id;
 
@@ -378,9 +396,9 @@ if(newFormData!=="")
     </Tooltip>,
   ];
   const SaveAsCancel = () => {
-    newFormData._id = selectedKey;
-    newFormData.name = newFormData.name.replace(" Copy", "");
-    dispatch(globalVariable({ currentData: newFormData }));
+    formdt._id = selectedKey;
+    formdt.name = formdt.name.replace(" Copy", "");
+    dispatch(globalVariable({ currentData: formdt }));
     setOpen(false);
   };
 
@@ -421,29 +439,18 @@ if(newFormData!=="")
   return (
     <>
       <div className="site-page-header-ghost-wrapper">
-        <PageHead title="FormEdit" extra={extra} ghost={false}>
-          {sumdt && <AntFormDisplay formArray={sumdt} name={"fsummary"} />}
+        <PageHead title="FormEdit" onBack={true} extra={extra} ghost={false}>
+          <AntFormDisplay
+            formArray={sumdt}
+            name={"fsummary"}
+            //initialValues={fsummaryInit}
+          />
         </PageHead>
       </div>
       <div style={{ margin: 10 }}>
-        <AntFormBuild formdt={newFormData} reload={onReload} />
+        <AntFormBuild formdt={formdt} reload={onReload} />
       </div>
-      <Button
-        onClick={() => {
-          var data = "data from iframe";
-          //window.parent.receiveDataFromIFrame(data);
-          window.parent.postMessage(JSON.stringify(newFormData), "*"); // '*' on any domain
-        }}
-      >
-        update
-      </Button>
-      <Button
-        onClick={() => {
-         console.log(newFormData,sumdt)
-        }}
-      >
-        newFormData,sudmt
-      </Button>
+      <Button onClick={() => console.log(update)}>update</Button>
       {snack}
     </>
   );
