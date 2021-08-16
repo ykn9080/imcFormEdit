@@ -29,6 +29,7 @@ const FormEdit = (props) => {
   const [fsummaryInit, setFsummaryInit] = useState();
   const [update, setUpdate] = useState(false);
   const [idcode, setIdcode] = useState();
+  const [backupNewFormData, setBackupNewFormData] = useState();
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -86,12 +87,14 @@ console.log(newFormData)
         sett.lineheight = allValues.lineheight;
 
          }
-        console.log(newFormData)
+        //console.log(newFormData,allValues)
        
-      //  dispatch(globalVariable({ currentData: newFormDt }));
+        //dispatch(globalVariable({ currentData: newFormData }));
         
         //if (["name", "desc"].indexOf(Object.keys(changedValues)[0]) === -1)
         //forceUpdate();
+        localStorage.setItem("allValues", JSON.stringify(allValues))
+        //updateForm(allValues)
       },
       onFinish: (values) => {
         console.log("Received values of form: ", values);
@@ -200,6 +203,7 @@ console.log(newFormData)
   else {
     const newcurrFormData = updateInitialValues(currFormData, newFormData);
     setSumdt(newcurrFormData)
+   
   }
     window.addEventListener("message", (event) => {
       // IMPORTANT: check the origin of the data!
@@ -221,6 +225,8 @@ console.log(newFormData)
           set={...set, formItemLayout:{labelCol:{span:2},wrapperCol:{span: 22}}};
         }
         dispatch(globalVariable({ currentData: event.data })); 
+        console.log(event.data)
+         setBackupNewFormData(event.data)
       } else {
         // The data was NOT sent from your site!
         // Be careful! Do not use it. This else branch is
@@ -253,7 +259,19 @@ if(newFormData!=="")
    setSumdt(updateInitialValues(sumdt1, newFormData));
   //   //if (newFormData._id) setUpdate(true);
    }, [newFormData]);
+   const updateForm=(newform, allValues)=>{
 
+         newform.data.setting.formItemLayout={labelCol:{span:allValues.labelwidth},wrapperCol:{span: 24 - allValues.labelwidth}};
+         newform.data.setting.formColumn = allValues.column;
+        newform.data.setting.layout = allValues.layout;
+        newform.data.setting.size = allValues.size;
+        newform.data.setting.lineheight = allValues.lineheight;
+        delete newform.data.setting.initialValues;
+        delete newform.data.setting.initial;
+        console.log(newform,allValues)
+       
+       return newform
+   }
   if (typeof newFormData._id === "undefined") {
     // iconSpin = { spin: true };
     btnDisabled = { disabled: true };
@@ -302,14 +320,21 @@ if(newFormData!=="")
           const list = cleanuplist(newFormData.data.list);
           newFormData.data.list = list;
           newFormData.type = "form";
-          let formid = newFormData._id;
-          if (idcode) formid = idcode;
-          let config;
-          config = {
-            method: "put",
-            url: `${currentsetting.webserviceprefix}bootform/${formid}`,
-            data: newFormData,
-          };
+          let allval=localStorage.getItem("allValues");
+          if(allval){
+          const updform=updateForm(newFormData, JSON.parse(allval));
+ dispatch(globalVariable({ currentData: updform }));
+ localStorage.removeItem("allValues")
+          }
+          // console.log(newFormData)
+          // let formid = newFormData._id;
+          // if (idcode) formid = idcode;
+          // let config;
+          // config = {
+          //   method: "put",
+          //   url: `${currentsetting.webserviceprefix}bootform/${formid}`,
+          //   data: newFormData,
+          // };
 
           //fsummaryInit ? (config = configput) : (config = configpost);
           //   ?
@@ -318,33 +343,33 @@ if(newFormData!=="")
           //       url: `${currentsetting.webserviceprefix}bootform`,
           //       data: newFormData,
           //     };
-          if (typeof newFormData._id === "undefined" && update === false)
-            config = {
-              ...config,
-              ...{
-                method: "post",
-                url: `${currentsetting.webserviceprefix}bootform`,
-              },
-            };
-          axios(config).then((r) => {
-            const dt = r.data;
-            if (config.method === "post" && update === false) {
-              setFsummaryInit({
-                id: dt._id,
-                name: dt.name,
-                desc: dt.desc,
-                column: dt.data.setting?.formColumn,
-                layout: dt.data.setting?.layout,
-                labelwidth: dt.data.setting.formItemLayout.labelCol.span,
-                size: dt.data.setting?.size,
-                lineheight: dt.data.setting?.lineheight,
-              });
-              setUpdate(true);
-              setIdcode(dt._id);
-              // history.push("/open/blank");
-            }
-            message.info("File Saved");
-          });
+          // if (typeof newFormData._id === "undefined" && update === false)
+          //   config = {
+          //     ...config,
+          //     ...{
+          //       method: "post",
+          //       url: `${currentsetting.webserviceprefix}bootform`,
+          //     },
+          //   };
+          // axios(config).then((r) => {
+          //   const dt = r.data;
+          //   if (config.method === "post" && update === false) {
+          //     setFsummaryInit({
+          //       id: dt._id,
+          //       name: dt.name,
+          //       desc: dt.desc,
+          //       column: dt.data.setting?.formColumn,
+          //       layout: dt.data.setting?.layout,
+          //       labelwidth: dt.data.setting.formItemLayout.labelCol.span,
+          //       size: dt.data.setting?.size,
+          //       lineheight: dt.data.setting?.lineheight,
+          //     });
+          //     setUpdate(true);
+          //     setIdcode(dt._id);
+          //     // history.push("/open/blank");
+          //   }
+          //   message.info("File Saved");
+          // });
         }}
       />
     </Tooltip>,
@@ -439,10 +464,10 @@ if(newFormData!=="")
       </Button>
       <Button
         onClick={() => {
-         console.log(newFormData,sumdt)
+         console.log(newFormData,sumdt,backupNewFormData)
         }}
       >
-        newFormData,sudmt
+        newFormData,sudmt,backupNewFormData
       </Button>
       {snack}
     </>
