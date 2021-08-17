@@ -10,7 +10,7 @@ import { DesktopOutlined, SaveOutlined, CopyOutlined } from "@ant-design/icons";
 import PageHead from "components/Common/PageHeader";
 import AntFormBuild from "Form/AntFormBuild";
 import AntFormDisplay from "Form/AntFormDisplay";
-import _ from "lodash"
+import _ from "lodash";
 import "components/Common/Antd.css";
 import useForceUpdate from "use-force-update";
 import Snackbar from "@material-ui/core/Snackbar";
@@ -29,7 +29,6 @@ const FormEdit = (props) => {
   const [fsummaryInit, setFsummaryInit] = useState();
   const [update, setUpdate] = useState(false);
   const [idcode, setIdcode] = useState();
-  const [backupNewFormData, setBackupNewFormData] = useState();
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -53,7 +52,7 @@ const FormEdit = (props) => {
   };
 
   let newFormData = useSelector((state) => state.global.currentData);
-console.log(newFormData)
+  console.log(newFormData);
 
   let selectedKey = useSelector((state) => state.global.selectedKey);
   //if (!selectedKey) history.push("/admin/control/form");
@@ -76,25 +75,41 @@ console.log(newFormData)
       },
 
       onValuesChange: (changedValues, allValues) => {
-        if(newFormData){
-        let sett = newFormData?.data?.setting;
-        if(!sett) sett={};
-        if(!sett.formItemLayout) sett={...sett, formItemLayout:{labelCol:{span:""},wrapperCol:{span:""}}};
-        sett={...sett, formItemLayout:{labelCol:{span:allValues.labelwidth},wrapperCol:{span: 24 - allValues.labelwidth}}};
-         sett.formColumn = allValues.column;
-        sett.layout = allValues.layout;
-        sett.size = allValues.size;
-        sett.lineheight = allValues.lineheight;
-
-         }
+        if (newFormData) {
+          let sett = newFormData?.data?.setting;
+          if (!sett) sett = {};
+          if (!sett.formItemLayout)
+            sett = {
+              ...sett,
+              formItemLayout: {
+                labelCol: { span: "" },
+                wrapperCol: { span: "" },
+              },
+            };
+          sett = {
+            ...sett,
+            formItemLayout: {
+              labelCol: { span: allValues.labelwidth },
+              wrapperCol: { span: 24 - allValues.labelwidth },
+            },
+          };
+          sett.formColumn = allValues.column;
+          sett.layout = allValues.layout;
+          sett.size = allValues.size;
+          sett.lineheight = allValues.lineheight;
+        }
         //console.log(newFormData,allValues)
-       
+
         //dispatch(globalVariable({ currentData: newFormData }));
-        
+
         //if (["name", "desc"].indexOf(Object.keys(changedValues)[0]) === -1)
         //forceUpdate();
-        localStorage.setItem("allValues", JSON.stringify(allValues))
-        //updateForm(allValues)
+        localStorage.setItem("allValues", JSON.stringify(allValues));
+        const updform = updateForm(newFormData, allValues);
+        console.log(updform);
+        dispatch(globalVariable({ currentData: updform }));
+        localStorage.removeItem("allValues");
+        onReload();
       },
       onFinish: (values) => {
         console.log("Received values of form: ", values);
@@ -181,10 +196,10 @@ console.log(newFormData)
   };
 
   let updateInitialValues = (currFormData, newFormData) => {
-    if(!currFormData)return
+    if (!currFormData) return;
     const initialValue = {
       column: newFormData.data?.setting?.formColumn,
-      labelwidth: newFormData.data?.setting?.formItemLayout?.labelCol?.span |2,
+      labelwidth: newFormData.data?.setting?.formItemLayout?.labelCol?.span | 2,
       layout: newFormData.data?.setting.layout,
       size: newFormData.data?.setting.size,
       lineheight: newFormData.data?.setting.lineheight,
@@ -196,15 +211,12 @@ console.log(newFormData)
 
   const [sumdt, setSumdt] = useState();
   useEffect(() => {
-    
-  if (newFormData === "") {
-    dispatch(globalVariable({ currentData: formdt1 }));
-  }
-  else {
-    const newcurrFormData = updateInitialValues(currFormData, newFormData);
-    setSumdt(newcurrFormData)
-   
-  }
+    if (newFormData === "") {
+      dispatch(globalVariable({ currentData: formdt1 }));
+    } else {
+      const newcurrFormData = updateInitialValues(currFormData, newFormData);
+      setSumdt(newcurrFormData);
+    }
     window.addEventListener("message", (event) => {
       // IMPORTANT: check the origin of the data!
 
@@ -221,12 +233,14 @@ console.log(newFormData)
           lineheight: set.lineheight,
         };
         event.data.data.setting.initialValues = init;
-        if(!set.formItemLayout){
-          set={...set, formItemLayout:{labelCol:{span:2},wrapperCol:{span: 22}}};
+        if (!set.formItemLayout) {
+          set = {
+            ...set,
+            formItemLayout: { labelCol: { span: 2 }, wrapperCol: { span: 22 } },
+          };
         }
-        dispatch(globalVariable({ currentData: event.data })); 
-        console.log(event.data)
-         setBackupNewFormData(event.data)
+        dispatch(globalVariable({ currentData: event.data }));
+        onReload();
       } else {
         // The data was NOT sent from your site!
         // Be careful! Do not use it. This else branch is
@@ -236,42 +250,43 @@ console.log(newFormData)
     });
   }, []);
   useEffect(() => {
-  //   console.log("newformdata가 달라졌으니 한번더",newFormData)
-  //   //dispatch(globalVariable({ formEdit: true }));
-  //   //temporary use for editing phase only for
-  //   //initialValue setting, pls delete when save
-  //   // newFormData.data.setting = {
-  //   //   ...newFormData.data.setting,
-  //   //   onValuesChange: (changedValues, allValues) => {
-  //   //     newFormData.data.setting.initialValues = {
-  //   //       ...newFormData.data.setting.initialValues,
-  //   //       ...changedValues,
-  //   //     };
-  //   //     dispatch(globalVariable({ currentData: newFormData }));
-  //   //   },
-  //   // };
-console.log(_.cloneDeep(newFormData))
+    //   console.log("newformdata가 달라졌으니 한번더",newFormData)
+    //   //dispatch(globalVariable({ formEdit: true }));
+    //   //temporary use for editing phase only for
+    //   //initialValue setting, pls delete when save
+    //   // newFormData.data.setting = {
+    //   //   ...newFormData.data.setting,
+    //   //   onValuesChange: (changedValues, allValues) => {
+    //   //     newFormData.data.setting.initialValues = {
+    //   //       ...newFormData.data.setting.initialValues,
+    //   //       ...changedValues,
+    //   //     };
+    //   //     dispatch(globalVariable({ currentData: newFormData }));
+    //   //   },
+    //   // };
+    console.log(_.cloneDeep(newFormData));
 
- let sumdt1=sumdt;
-if(newFormData!=="")
-   
-    if(!sumdt1)sumdt1=currFormData;
-   setSumdt(updateInitialValues(sumdt1, newFormData));
-  //   //if (newFormData._id) setUpdate(true);
-   }, [newFormData]);
-   const updateForm=(newform, allValues)=>{
+    let sumdt1 = sumdt;
+    if (newFormData !== "") if (!sumdt1) sumdt1 = currFormData;
+    setSumdt(updateInitialValues(sumdt1, newFormData));
 
-         newform.data.setting.formItemLayout={labelCol:{span:allValues.labelwidth},wrapperCol:{span: 24 - allValues.labelwidth}};
-         newform.data.setting.formColumn = allValues.column;
-        newform.data.setting.layout = allValues.layout;
-        newform.data.setting.size = allValues.size;
-        newform.data.setting.lineheight = allValues.lineheight;
-        delete newform.data.setting.initialValues;
-        delete newform.data.setting.initial;
-        console.log(newform,allValues)
-       
-       return newform
-   }
+    //   //if (newFormData._id) setUpdate(true);
+  }, [newFormData]);
+  const updateForm = (newform, allValues) => {
+    newform.data.setting.formItemLayout = {
+      labelCol: { span: allValues.labelwidth },
+      wrapperCol: { span: 24 - allValues.labelwidth },
+    };
+    newform.data.setting.formColumn = allValues.column;
+    newform.data.setting.layout = allValues.layout;
+    newform.data.setting.size = allValues.size;
+    newform.data.setting.lineheight = allValues.lineheight;
+    delete newform.data.setting.initialValues;
+    delete newform.data.setting.initial;
+    console.log(newform, allValues);
+
+    return newform;
+  };
   if (typeof newFormData._id === "undefined") {
     // iconSpin = { spin: true };
     btnDisabled = { disabled: true };
@@ -320,56 +335,14 @@ if(newFormData!=="")
           const list = cleanuplist(newFormData.data.list);
           newFormData.data.list = list;
           newFormData.type = "form";
-          let allval=localStorage.getItem("allValues");
-          if(allval){
-          const updform=updateForm(newFormData, JSON.parse(allval));
- dispatch(globalVariable({ currentData: updform }));
- localStorage.removeItem("allValues")
+          let allval = localStorage.getItem("allValues");
+          if (allval) {
+            const updform = updateForm(newFormData, JSON.parse(allval));
+            dispatch(globalVariable({ currentData: updform }));
+            localStorage.removeItem("allValues");
+            onReload();
           }
-          // console.log(newFormData)
-          // let formid = newFormData._id;
-          // if (idcode) formid = idcode;
-          // let config;
-          // config = {
-          //   method: "put",
-          //   url: `${currentsetting.webserviceprefix}bootform/${formid}`,
-          //   data: newFormData,
-          // };
-
-          //fsummaryInit ? (config = configput) : (config = configpost);
-          //   ?
-          //   : {
-          //       method: "post",
-          //       url: `${currentsetting.webserviceprefix}bootform`,
-          //       data: newFormData,
-          //     };
-          // if (typeof newFormData._id === "undefined" && update === false)
-          //   config = {
-          //     ...config,
-          //     ...{
-          //       method: "post",
-          //       url: `${currentsetting.webserviceprefix}bootform`,
-          //     },
-          //   };
-          // axios(config).then((r) => {
-          //   const dt = r.data;
-          //   if (config.method === "post" && update === false) {
-          //     setFsummaryInit({
-          //       id: dt._id,
-          //       name: dt.name,
-          //       desc: dt.desc,
-          //       column: dt.data.setting?.formColumn,
-          //       layout: dt.data.setting?.layout,
-          //       labelwidth: dt.data.setting.formItemLayout.labelCol.span,
-          //       size: dt.data.setting?.size,
-          //       lineheight: dt.data.setting?.lineheight,
-          //     });
-          //     setUpdate(true);
-          //     setIdcode(dt._id);
-          //     // history.push("/open/blank");
-          //   }
-          //   message.info("File Saved");
-          // });
+          window.parent.postMessage(JSON.stringify(newFormData), "*");
         }}
       />
     </Tooltip>,
@@ -464,10 +437,10 @@ if(newFormData!=="")
       </Button>
       <Button
         onClick={() => {
-         console.log(newFormData,sumdt,backupNewFormData)
+          console.log(newFormData, sumdt);
         }}
       >
-        newFormData,sudmt,backupNewFormData
+        newFormData,sudmt
       </Button>
       {snack}
     </>
