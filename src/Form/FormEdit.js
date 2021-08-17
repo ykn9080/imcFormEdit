@@ -3,32 +3,33 @@ import { useSelector, useDispatch } from "react-redux";
 import { globalVariable } from "actions";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import cloneDeep from "lodash/cloneDeep";
 import { currentsetting } from "config/index.js";
-import { Button, Tooltip, message } from "antd";
-import { DesktopOutlined, SaveOutlined, CopyOutlined } from "@ant-design/icons";
+import { Button, Tooltip, Modal,Row,Col } from "antd";
+import { SaveOutlined, SettingOutlined,MenuOutlined } from "@ant-design/icons";
 import PageHead from "components/Common/PageHeader";
 import AntFormBuild from "Form/AntFormBuild";
 import AntFormDisplay from "Form/AntFormDisplay";
 import _ from "lodash";
 import "components/Common/Antd.css";
-import useForceUpdate from "use-force-update";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import ListGen from "components/SKD/ListGen";
+import MoreMenu from "components/SKD/MoreMenu";
 
 const FormEdit = (props) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const forceUpdate = useForceUpdate();
-  let iconSpin = {},
-    btnDisabled = {};
+
 
   //for snackbar open/close
   const [open, setOpen] = useState(false);
   const [fsummaryInit, setFsummaryInit] = useState();
   const [update, setUpdate] = useState(false);
   const [idcode, setIdcode] = useState();
+  const [visible, setVisible] = useState(false);
+  const [setting, setSetting] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -287,10 +288,7 @@ const FormEdit = (props) => {
 
     return newform;
   };
-  if (typeof newFormData._id === "undefined") {
-    // iconSpin = { spin: true };
-    btnDisabled = { disabled: true };
-  }
+
   const cleanuplist = (list) => {
     const deletetrash = (k) => {
       let kk = { ...k };
@@ -315,21 +313,34 @@ const FormEdit = (props) => {
     });
     return list;
   };
-  const extra = [
-    <Tooltip title="Save" key="1save">
-      <Button
-        shape="circle"
-        icon={<SaveOutlined {...iconSpin} />}
-        onClick={() => {
-          message.config({
-            top: 100,
-            duration: 3,
-            maxCount: 3,
-            rtl: true,
-          });
-          // //remove onValuesChange
-          //inorderto set initialValues, append onValuesChange eventhandler
-          //must remove onValuesChange when to save to database
+  
+   const menu = [
+
+    {
+      title: (
+         <Tooltip title="Form List" key="1saveas" placement="left">
+      <MenuOutlined />
+      </Tooltip>
+      ),
+       onClick:() => {
+         setVisible(true)
+        }
+    },
+    {
+      title: (
+         <Tooltip title="Form Setting" key="1setting" placement="left">
+<SettingOutlined />
+    </Tooltip>
+      ),
+       onClick:() => {
+         setSetting(true)
+        }
+    },
+  ];
+  const extra = (
+     <Row justify="end"><Col>
+    <Tooltip title="Save & back" key="1save">
+      <IconButton aria-label="save" onClick={() => {
           delete newFormData.data.setting.onValuesChange;
           //cleanup list
           const list = cleanuplist(newFormData.data.list);
@@ -343,38 +354,16 @@ const FormEdit = (props) => {
             onReload();
           }
           window.parent.postMessage(JSON.stringify(newFormData), "*");
-        }}
-      />
-    </Tooltip>,
-    <Tooltip title="Save As" key="1saveas">
-      <Button
-        {...btnDisabled}
-        shape="circle"
-        icon={<CopyOutlined />}
-        onClick={() => {
-          //remove onValuesChange
-          let curr = cloneDeep(newFormData);
-          delete curr.data.setting.onValuesChange;
-          delete curr._id;
+        }}>
+                      <SaveOutlined />
+                    </IconButton>
 
-          curr.name += " Copy";
-          sumdt.setting.initialValues.name += " Copy";
-          curr.data.setting.initialValues = sumdt.setting.initialValues;
-
-          setOpen(true);
-          dispatch(globalVariable({ currentData: curr }));
-        }}
-      />
-    </Tooltip>,
-    <Tooltip title="View" key="2view">
-      <Button
-        {...btnDisabled}
-        shape="circle"
-        icon={<DesktopOutlined />}
-        onClick={() => history.push("/admin/control/form/formview")}
-      />
-    </Tooltip>,
-  ];
+    </Tooltip>
+  
+      </Col><Col>
+    <MoreMenu menu={menu}  />
+   </Col></Row>
+  );
   const SaveAsCancel = () => {
     newFormData._id = selectedKey;
     newFormData.name = newFormData.name.replace(" Copy", "");
@@ -413,36 +402,78 @@ const FormEdit = (props) => {
       </Alert> */}
     </Snackbar>
   );
+    const dataformat = ["_id", "data", "title", "desc", "type"];
+  const selectHandler = (item) => {
+    console.log("selected123", item, item.id);
+    dispatch(globalVariable({ currentData: item }));
+    dispatch(globalVariable({ selectedKey: item._id }));
+    axios
+      .get(`${currentsetting.webserviceprefix}bootform/${item._id}`)
+      .then((response) => {
+        dispatch(globalVariable({ currentData: response.data }));
+      });
+   // history.push(`/view?_id=${item._id}`);
+    setVisible(false);
+  };
+  const handleOk = () => {
+    setConfirmLoading(true);
+    setVisible(false);
+    setConfirmLoading(false);
+  };
+  const settingSave=()=>{
+
+  }
+  const formlist=(
+     <Modal
+        title="Title"
+        visible={visible}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={() => setVisible(false)}
+      >
+        <>
+          <ListGen
+            url="bootform"
+            notitle={true}
+            nodelete
+            noedit
+            selectHandler={selectHandler}
+            dataformat={["_id", "data", "title", "desc", "type"]}
+          />
+        </>
+      </Modal>
+  )
+  const settingpage=(
+     <Modal
+        title="Setting"
+        visible={setting}
+        onOk={settingSave}
+        confirmLoading={confirmLoading}
+        onCancel={() => setSetting(false)}
+      >
+        <>
+         <AntFormDisplay formid="5f45f4389461621a00fbe017" />
+        </>
+      </Modal>
+  )
   const onReload = () => {
     history.push("/admin/control/form/formview?rtn=formEdit");
   };
+
   return (
     <>
       <div className="site-page-header-ghost-wrapper">
-        <PageHead title="FormEdit" extra={extra} ghost={false}>
+        <PageHead ghost={false}>
+         {extra}
           {sumdt && <AntFormDisplay formArray={sumdt} name={"fsummary"} />}
         </PageHead>
       </div>
       <div style={{ margin: 10 }}>
         <AntFormBuild formdt={newFormData} reload={onReload} />
       </div>
-      <Button
-        onClick={() => {
-          var data = "data from iframe";
-          //window.parent.receiveDataFromIFrame(data);
-          window.parent.postMessage(JSON.stringify(newFormData), "*"); // '*' on any domain
-        }}
-      >
-        update
-      </Button>
-      <Button
-        onClick={() => {
-          console.log(newFormData, sumdt);
-        }}
-      >
-        newFormData,sudmt
-      </Button>
       {snack}
+      {formlist}
+      {settingpage}
     </>
   );
 };

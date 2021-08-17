@@ -436,6 +436,7 @@ const AntFormBuild = (props) => {
         <TabPane tab="Script" key="2">
           <AntFormDisplay
             formid="5f7be94d85cd1730c8544018"
+            
             // onValuesChange={onValuesChangeParamter}
           />
         </TabPane>
