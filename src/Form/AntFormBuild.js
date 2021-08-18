@@ -94,7 +94,8 @@ const AntFormBuild = (props) => {
     // let list = _.sortBy(arr.data.list, ["seq"]);
     list.map((k, i) => {
       if (k.type !== "button") {
-        k.seq = i;
+        //k["seq"] = i;
+        Object.assign(k, { seq: i });
         list.splice(i, 1, k);
       }
       return null;
@@ -124,8 +125,7 @@ const AntFormBuild = (props) => {
     //st>ed -> st prev +1 st->ed
   };
   useEffect(() => {
-    if(props.formdt.data)
-    setFormArray(props.formdt.data);
+    if (props.formdt.data) setFormArray(props.formdt.data);
   }, [props.formdt, open]);
 
   useEffect(() => {
@@ -436,7 +436,7 @@ const AntFormBuild = (props) => {
         <TabPane tab="Script" key="2">
           <AntFormDisplay
             formid="5f7be94d85cd1730c8544018"
-            
+
             // onValuesChange={onValuesChangeParamter}
           />
         </TabPane>

@@ -269,9 +269,9 @@ const AntFormDisplay = (props) => {
     form = props.form;
   }
   useEffect(() => {
-   // if (props.changedInitial) {
-      form.setFieldsValue(props?.formArray?.setting?.initialValues);
-   // }
+    // if (props.changedInitial) {
+    form.setFieldsValue(props?.formArray?.setting?.initialValues);
+    // }
     if (formArray) {
       const lh = formArray.setting.lineheight;
       lineHeightSetting(lh);
@@ -279,9 +279,9 @@ const AntFormDisplay = (props) => {
   });
 
   useEffect(() => {
-  //  if (props.changedInitial) {
-      form.setFieldsValue(props?.formArray?.setting?.initialValues);
-  //  }
+    //  if (props.changedInitial) {
+    form.setFieldsValue(props?.formArray?.setting?.initialValues);
+    //  }
   }, [props?.formArray?.setting?.initialValues]);
 
   useEffect(() => {
@@ -544,7 +544,6 @@ const AntFormDisplay = (props) => {
     if (props.onValuesChange) {
       props.onValuesChange(changedValues, allValues);
     }
-    console.log(allValues)
   };
 
   const formhead = (
