@@ -218,7 +218,6 @@ const Admin = ({ match }) => {
   if (typeof match.params.child != "undefined") title = match.params.child;
   if (typeof match.params.grandchild != "undefined")
     title = match.params.grandchild;
-  console.log(title);
   if (title) {
     titleUpper = title.charAt(0).toUpperCase() + title.slice(1);
     if (title.indexOf("allpurpose") > -1) {

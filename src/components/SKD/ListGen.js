@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { globalVariable } from "actions";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import { currentsetting } from "config/index.js";
 import AntList from "components/Common/List";
 import { Tooltip, Button } from "antd";
 import PageHead from "components/Common/PageHeader";
@@ -73,18 +72,16 @@ const ListGen = (props) => {
   useEffect(() => {
     setLoading(true);
 
-    axios
-      .get(`${currentsetting.webserviceprefix}${props.url}`)
-      .then((response) => {
-        let imsiData1 = [];
-        response.data.map((k, i) => {
-          return imsiData1.push(datamapping(k));
-        });
-        setListData(imsiData1);
-
-        dispatch(globalVariable({ listData: imsiData1 }));
-        setLoading(false);
+    axios.get(`${props.url}`).then((response) => {
+      let imsiData1 = [];
+      response.data.map((k, i) => {
+        return imsiData1.push(datamapping(k));
       });
+      setListData(imsiData1);
+
+      dispatch(globalVariable({ listData: imsiData1 }));
+      setLoading(false);
+    });
   }, []);
 
   const createHandler = () => {
@@ -118,7 +115,7 @@ const ListGen = (props) => {
   const deleteHandler = (item) => {
     let config = {
       method: "delete",
-      url: `${currentsetting.webserviceprefix}${props.url}/${item._id}`,
+      url: `${props.url}/${item._id}`,
     };
     axios(config).then((r) => {
       _.remove(listData, function (currentObject) {

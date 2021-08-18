@@ -7,7 +7,7 @@ import $ from "jquery";
 import { makeStyles } from "@material-ui/core/styles";
 import "antd/dist/antd.css";
 import "components/Common/Antd.css";
-import { Button, Col, Row, Tabs, message } from "antd";
+import { Button, Col, Row, Tabs, message,Tooltip } from "antd";
 import AntFormElement from "./AntFormElement";
 import SpeedDialButton from "components/Common/SpeedDial";
 import ElementInput from "Form/ElementInput";
@@ -60,6 +60,7 @@ const AntFormBuild = (props) => {
   const [formArray, setFormArray] = useState(data);
   const [formdt, setFormdt] = useState(props.formdt);
   const [tabarray, setTabarray] = useState("");
+  const [scriptInit, setScriptInit] = useState();
 
   let open = useSelector((state) => state.global.openDialog); //edit
   let open1 = useSelector((state) => state.global.openDialog1); //create new
@@ -125,8 +126,15 @@ const AntFormBuild = (props) => {
     //st>ed -> st prev +1 st->ed
   };
   useEffect(() => {
-    if (props.formdt.data) setFormArray(props.formdt.data);
-  }, [props.formdt, open]);
+    if (props.formdt.data) {
+      setFormArray(props.formdt.data);
+      setScriptInit(JSON.stringify(props.formdt.data,null,4))
+    }
+     else if (currentData) {
+      setFormArray(currentData);
+      setScriptInit(JSON.stringify(currentData,null,4))
+    }
+  }, [props.formdt, open,currentData]);
 
   useEffect(() => {
     dispatch(globalVariable({ formEdit: true }));
@@ -409,7 +417,8 @@ const AntFormBuild = (props) => {
     dispatch(globalVariable({ openDialog1: false }));
   };
   const onValuesChangeForm = (changedValues, allValues) => {
-    // setInitParameter({ script: JSON.stringify(allValues, null, 4) });
+    let newscript={...scriptInit, setting:allValues}
+    setScriptInit({ script: JSON.stringify(newscript, null, 4) });
     // setInitFormArray(allValues);
   };
   // const onValuesChangeParamter = (changedValues, allValues) => {
@@ -422,6 +431,14 @@ const AntFormBuild = (props) => {
     setFormArray(val);
     props.reload();
   };
+    const copyClipboard = () => {
+    navigator.clipboard.writeText(
+      scriptInit
+    ).then(
+    message.info("Copied to clipboard")
+    )
+  };
+
   return (
     <div className={classes.root}>
       <Tabs defaultActiveKey="1">
@@ -434,12 +451,19 @@ const AntFormBuild = (props) => {
           />
         </TabPane>
         <TabPane tab="Script" key="2">
+          <>
           <AntFormDisplay
             formid="5f7be94d85cd1730c8544018"
-
+            formArray={{ list: [ { label: "Script", name: "script", type: "input.textarea", seq: 0, minRows: 10,maxRows:25 } ], 
+            setting: { editable: false, name: "antform1", layout: "vertical", formColumn: 1 } }}
             // onValuesChange={onValuesChangeParamter}
-          />
-        </TabPane>
+            initialValues={{script:scriptInit}}
+          />  
+           <Tooltip title="Copy code to clipboard">
+          <Button key="copy" onClick={copyClipboard}>
+            Copy
+          </Button>
+          </Tooltip></>    </TabPane>
       </Tabs>
 
       <div className={classes.speedDialWrapper}>
@@ -473,6 +497,7 @@ const AntFormBuild = (props) => {
           />
         </Popup>
       </DialogSelect>
+      <Button onClick={()=>{console.log(scriptInit)}}>scriptinit</Button>
     </div>
   );
 };

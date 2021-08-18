@@ -4,8 +4,13 @@ import { globalVariable } from "actions";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { currentsetting } from "config/index.js";
-import { Tooltip, Modal, Row, Col } from "antd";
-import { SaveOutlined, SettingOutlined, MenuOutlined } from "@ant-design/icons";
+import { Tooltip, Modal, Row, Col, message } from "antd";
+import {
+  SaveOutlined,
+  SettingOutlined,
+  MenuOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import PageHead from "components/Common/PageHeader";
 import AntFormBuild from "Form/AntFormBuild";
 import AntFormDisplay from "Form/AntFormDisplay";
@@ -25,6 +30,7 @@ const FormEdit = (props) => {
   const [visible, setVisible] = useState(false);
   const [setting, setSetting] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [apiurl, setApiurl] = useState();
 
   let formdt1 = {
     data: {
@@ -64,31 +70,6 @@ const FormEdit = (props) => {
       },
 
       onValuesChange: (changedValues, allValues) => {
-        // if (newFormData) {
-        //   let sett = newFormData?.data?.setting;
-        //   if (!sett) sett = {};
-        //   if (!sett.formItemLayout)
-        //     sett = {
-        //       ...sett,
-        //       formItemLayout: {
-        //         labelCol: { span: "" },
-        //         wrapperCol: { span: "" },
-        //       },
-        //     };
-        //   sett = {
-        //     ...sett,
-        //     formItemLayout: {
-        //       labelCol: { span: allValues.labelwidth },
-        //       wrapperCol: { span: 24 - allValues.labelwidth },
-        //     },
-        //   };
-        //   sett.formColumn = allValues.column;
-        //   sett.layout = allValues.layout;
-        //   sett.size = allValues.size;
-        //   sett.lineheight = allValues.lineheight;
-        // }
-
-        //forceUpdate();
         localStorage.setItem("allValues", JSON.stringify(allValues));
         const updform = updateForm(newFormData, allValues);
         dispatch(globalVariable({ currentData: updform }));
@@ -218,6 +199,7 @@ const FormEdit = (props) => {
         size: set.size,
         lineheight: set.lineheight,
       };
+      console.log(event.data);
       event.data.data.setting.initialValues = init;
       if (!set.formItemLayout) {
         set = {
@@ -225,6 +207,7 @@ const FormEdit = (props) => {
           formItemLayout: { labelCol: { span: 2 }, wrapperCol: { span: 22 } },
         };
       }
+
       dispatch(globalVariable({ currentData: event.data }));
 
       localStorage.setItem("currentData", JSON.stringify(event.data));
@@ -233,13 +216,17 @@ const FormEdit = (props) => {
   }, []);
   useEffect(() => {
     let sumdt1 = sumdt;
-    if (newFormData !== "") if (!sumdt1) sumdt1 = currFormData;
-    setSumdt(updateInitialValues(sumdt1, newFormData));
-    if (checkisDiff === true) {
+    if (newFormData !== "") {
+      if (!sumdt1) sumdt1 = currFormData;
+      setSumdt(updateInitialValues(sumdt1, newFormData));
+      if (newFormData?.data?.apiurl) setApiurl(newFormData.data.apiurl);
+    }
+    if (checkisDiff()) {
       localStorage.setItem("currentData", JSON.stringify(newFormData));
       onReload();
+      console.log("diff");
     }
-
+    console.log("newFormData changed", newFormData);
     //   //if (newFormData._id) setUpdate(true);
   }, [newFormData]);
   const checkisDiff = () => {
@@ -294,6 +281,16 @@ const FormEdit = (props) => {
   const menu = [
     {
       title: (
+        <Tooltip title="Create New Form" key="createform" placement="left">
+          <PlusOutlined />
+        </Tooltip>
+      ),
+      onClick: () => {
+        dispatch(globalVariable({ currentData: formdt1 }));
+      },
+    },
+    {
+      title: (
         <Tooltip title="Form List" key="1saveas" placement="left">
           <MenuOutlined />
         </Tooltip>
@@ -326,6 +323,7 @@ const FormEdit = (props) => {
               newFormData.data.list = list;
               newFormData.type = "form";
               let allval = localStorage.getItem("allValues");
+              if (apiurl) newFormData.data.apiurl = apiurl;
               if (allval) {
                 const updform = updateForm(newFormData, JSON.parse(allval));
                 dispatch(globalVariable({ currentData: updform }));
@@ -334,6 +332,29 @@ const FormEdit = (props) => {
                 localStorage.removeItem("allValues");
                 onReload();
               }
+
+              if (apiurl) {
+                let formid = newFormData._id;
+                let config;
+                config = {
+                  method: "put",
+                  url: `${apiurl}/${formid}`,
+                  data: newFormData.data,
+                };
+
+                if (typeof formid === "undefined")
+                  config = {
+                    ...config,
+                    ...{
+                      method: "post",
+                      url: `${apiurl}`,
+                    },
+                  };
+                axios(config).then((r) => {
+                  message.info("File Saved");
+                });
+              }
+
               window.parent.postMessage(JSON.stringify(newFormData), "*");
             }}
           >
@@ -368,44 +389,25 @@ const FormEdit = (props) => {
     setVisible(false);
     setConfirmLoading(false);
   };
-  const settingSave = () => {};
-  const formlist = (
-    <Modal
-      title="Title"
-      visible={visible}
-      onOk={handleOk}
-      confirmLoading={confirmLoading}
-      onCancel={() => setVisible(false)}
-    >
-      <>
-        <ListGen
-          url="bootform"
-          notitle={true}
-          nodelete
-          noedit
-          selectHandler={selectHandler}
-          dataformat={["_id", "data", "title", "desc", "type"]}
-        />
-      </>
-    </Modal>
-  );
-  const settingpage = (
-    <Modal
-      title="Setting"
-      visible={setting}
-      onOk={settingSave}
-      confirmLoading={confirmLoading}
-      onCancel={() => setSetting(false)}
-    >
-      <>
-        <AntFormDisplay formid="5f45f4389461621a00fbe017" />
-      </>
-    </Modal>
-  );
+  const settingSave = () => {
+    console.log(localStorage.getItem("apiupdate"));
+    setApiurl(localStorage.getItem("apiupdate"));
+    localStorage.removeItem("apiupdate");
+    setSetting(false);
+  };
+  const onApiUpdate = (changedValues, allValues) => {
+    localStorage.setItem("apiupdate", changedValues.apiurl);
+  };
+  // const formlist = (
+
+  // );
+  // const settingpage = (
+
+  // );
   const onReload = () => {
     history.push("/admin/control/form/formview?rtn=formEdit");
   };
-
+  console.log(apiurl);
   return (
     <>
       <div className="site-page-header-ghost-wrapper">
@@ -417,8 +419,56 @@ const FormEdit = (props) => {
       <div style={{ margin: 10 }}>
         <AntFormBuild formdt={newFormData} reload={onReload} />
       </div>
-      {formlist}
-      {settingpage}
+      <Modal
+        title="Title"
+        visible={visible}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={() => setVisible(false)}
+        destroyOnClose={true}
+      >
+        <>
+          <ListGen
+            url={apiurl}
+            notitle={true}
+            nodelete
+            noedit
+            selectHandler={selectHandler}
+            dataformat={["_id", "data", "title", "desc", "type"]}
+          />
+        </>
+      </Modal>
+      <Modal
+        title="Setting"
+        visible={setting}
+        onOk={settingSave}
+        confirmLoading={confirmLoading}
+        onCancel={() => setSetting(false)}
+        destroyOnClose={true}
+      >
+        <>
+          <AntFormDisplay
+            formArray={{
+              setting: {
+                editable: false,
+                name: "antform3",
+                layout: "vertical",
+                formColumn: 1,
+              },
+              list: [
+                {
+                  label: "Apiurl",
+                  name: "apiurl",
+                  type: "input",
+                  seq: 0,
+                },
+              ],
+            }}
+            initialValues={{ apiurl: apiurl }}
+            onValuesChange={onApiUpdate}
+          />
+        </>
+      </Modal>
     </>
   );
 };

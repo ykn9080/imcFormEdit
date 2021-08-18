@@ -286,12 +286,12 @@ const AntFormDisplay = (props) => {
 
   useEffect(() => {
     form.resetFields();
-    setTimeout(() => {
-      if (props.formArray) {
-        const lh = props.formArray.setting.lineheight;
-        lineHeightSetting(lh);
-      } else lineHeightSetting("small");
-    }, [0]);
+    // setTimeout(() => {
+    //   if (props.formArray) {
+    //     const lh = props.formArray.setting.lineheight;
+    //     lineHeightSetting(lh);
+    //   } else lineHeightSetting("small");
+    // }, [0]);
   }, [props.initialValues]);
 
   useEffect(() => {
@@ -393,21 +393,11 @@ const AntFormDisplay = (props) => {
   const makeFormArray = (formArray) => {
     let setting = {
       editable: false,
-      name: "antform",
-      layout: "",
+      name: "antform2",
       formColumn: 1,
-      formItemLayout: {},
-      tailLayout: {},
-      initial: {}, // = props.formArray && createInitValuesWithDefault(props.formArray.list),
       size: "middle",
-      title: formSummary ? formSummary.title : "",
-      desc: formSummary && formSummary.desc ? formSummary.desc : "",
     };
-    if (props.title) setting = { ...setting, title: props.title };
-    if (props.desc) setting = { ...setting, desc: props.desc };
-    // if (props.initialValues) {
-    //   setFset({ ...fset, initialValues: props.initialValues });
-    // }
+   
 
     if (props.dropdownRender)
       setOthersetting({ dropdownRender: props.dropdownRender });
