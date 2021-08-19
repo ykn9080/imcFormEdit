@@ -71,17 +71,17 @@ const ListGen = (props) => {
   };
   useEffect(() => {
     setLoading(true);
+    let imsiData1 = [];
+    if (props.url)
+      axios.get(`${props.url}`).then((response) => {
+        response.data.map((k, i) => {
+          return imsiData1.push(datamapping(k));
+        });
+        setListData(imsiData1);
 
-    axios.get(`${props.url}`).then((response) => {
-      let imsiData1 = [];
-      response.data.map((k, i) => {
-        return imsiData1.push(datamapping(k));
+        dispatch(globalVariable({ listData: imsiData1 }));
+        setLoading(false);
       });
-      setListData(imsiData1);
-
-      dispatch(globalVariable({ listData: imsiData1 }));
-      setLoading(false);
-    });
   }, []);
 
   const createHandler = () => {

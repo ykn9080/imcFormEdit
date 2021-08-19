@@ -375,12 +375,10 @@ const FormEdit = (props) => {
 
     localStorage.setItem("currentData", JSON.stringify(item));
     dispatch(globalVariable({ selectedKey: item._id }));
-    axios
-      .get(`${currentsetting.webserviceprefix}bootform/${item._id}`)
-      .then((response) => {
-        dispatch(globalVariable({ currentData: response.data }));
-        localStorage.setItem("currentData", JSON.stringify(response.data));
-      });
+    axios.get(`${apiurl}/${item._id}`).then((response) => {
+      dispatch(globalVariable({ currentData: response.data }));
+      localStorage.setItem("currentData", JSON.stringify(response.data));
+    });
     // history.push(`/view?_id=${item._id}`);
     setVisible(false);
   };
