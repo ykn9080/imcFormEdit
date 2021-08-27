@@ -10,7 +10,6 @@ import { Button, Tooltip, Form } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
 import PageHead from "components/Common/PageHeader";
 import AntFormDisplay from "Form/AntFormDisplay";
-import Popup from "components/Common/Popup";
 import Swal from "sweetalert2";
 
 const ElementInput = (props) => {
@@ -163,7 +162,7 @@ const ElementInput = (props) => {
     let rule = [],
       eleData = elementData;
     if (eldt) eleData = eldt;
-    if (eleData.rules && eleData.rules.length > 0) rule = eleData.rules[0];
+    //if (eleData.rules && eleData.rules.length > 0) rule = eleData.rules[0];
     //nostyle setting
     let ratio = eleData.ratio;
     if (!ratio && eleData.array) {

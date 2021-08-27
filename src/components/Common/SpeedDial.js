@@ -22,7 +22,6 @@ const SpeedDialButton = (props) => {
   const actions = props.actions;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [hidden, setHidden] = React.useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -37,7 +36,7 @@ const SpeedDialButton = (props) => {
       <SpeedDial
         ariaLabel="SpeedDial openIcon example"
         className={classes.speedDial}
-        hidden={hidden}
+        hidden={false}
         icon={<SpeedDialIcon openIcon={<AddIcon />} />}
         onClose={handleClose}
         onOpen={handleOpen}

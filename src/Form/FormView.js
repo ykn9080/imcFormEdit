@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { globalVariable } from "actions";
 import { useLocation, useHistory } from "react-router-dom";
 import querySearch from "stringquery";
-import { Button, Tooltip, Space, Popover, Alert, Typography } from "antd";
+import { Button, Tooltip, Space, Popover, Alert } from "antd";
 import {
   FormOutlined,
   PaperClipOutlined,
@@ -14,8 +14,6 @@ import PageHead from "components/Common/PageHeader";
 import AntFormDisplay from "Form/AntFormDisplay";
 import "components/Common/Antd.css";
 
-const { Text } = Typography;
-
 const FormView = (props) => {
   const location = useLocation();
   let query = querySearch(location.search);
@@ -24,7 +22,6 @@ const FormView = (props) => {
   dispatch(globalVariable({ formEdit: false }));
   const [submitted, setSubmitted] = useState();
   let formdt = useSelector((state) => state.global.currentData);
-  let selectedKey = useSelector((state) => state.global.selectedKey);
 
   //if (query.rtn) history.push("/admin/control/form/formedit");
   if (query.rtn) history.push("/");

@@ -109,7 +109,9 @@ export const vectorCreate = (vname, modelname) => {
         vector1 = r.vector1;
         vector2 = r.vector2;
       }
+      return null;
     });
+    return null;
   });
 
   switch (ruletype) {
@@ -243,10 +245,8 @@ const ModelParameter = (props) => {
   let tempModel = useSelector((state) => state.global.tempModel);
   let paramvalue = useSelector((state) => state.global.paramvalue);
   const [initParameter, setInitParameter] = useState();
-  const [tabkey, setTabkey] = useState();
   const [selectedItems, setSelectedItems] = useState(null);
   const [listItems, setListItems] = useState(null);
-  const [multiArr, setMultiArr] = useState();
   const [paramtype, setParamtype] = useState(true);
   const [allForm, setAllForm] = useState();
   const [loading, setLoading] = useState(false);
@@ -342,7 +342,6 @@ const ModelParameter = (props) => {
         key: i,
       });
     });
-    setMultiArr(multiData);
     let pro = { ...tempModel.properties, multiArr: multiData };
     let newtempModel = { ...tempModel, properties: pro };
     dispatch(globalVariable({ tempModel: newtempModel }));
@@ -351,9 +350,6 @@ const ModelParameter = (props) => {
     <>
       <Tabs
         defaultActiveKey="1"
-        onChange={(key) => {
-          setTabkey(key);
-        }}
         style={{ minHeight: 500 }}
         tabBarExtraContent={operations}
       >

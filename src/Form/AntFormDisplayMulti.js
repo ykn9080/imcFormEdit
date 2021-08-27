@@ -1,28 +1,16 @@
 import { localHandle } from "components/functions/LodashUtil";
-import $ from "jquery";
 import React, { useEffect, useState } from "react";
 import { Typography } from "antd";
 import AntFormDisplay from "./AntFormDisplay";
-import _ from "lodash";
 
 const { Text } = Typography;
 
 const AntFormDisplayMulti = (props) => {
-  const [formList, setFormList] = useState();
   let [finishmulti, setFinishmulti] = useState();
   useEffect(() => {
-    console.log(props);
     localHandle("onFinish", "remove");
     localHandle("onFinishMulti", "remove");
     updateValues();
-    // let valobj = {};
-    // const valMulti = props.multiArr.map((k, i) => {
-    //   valobj = { ...valobj, ...k.initialValues };
-    //   return { formid: k.formid, val: k.initialValues };
-    // });
-    // setFinishmulti(valMulti);
-    // localHandle("onFinishMulti", valMulti);
-    // localHandle("onFinish", valobj);
   }, [props.multiArr]);
 
   const updateValues = (formid, val) => {
@@ -39,15 +27,13 @@ const AntFormDisplayMulti = (props) => {
           finishmulti.splice(i, 1, k);
         }
         valobj = { ...valobj, ...k.val };
+        return false;
       });
-    console.log(formid, val, finishmulti);
     setFinishmulti(finishmulti);
     localHandle("onFinishMulti", finishmulti);
     localHandle("onFinish", valobj);
   };
   const onValuesChange1 = (changedValues, allValues, formid) => {
-    console.log(allValues, formid);
-
     if (props.onChange) {
       props.onChange(allValues, formid);
     }

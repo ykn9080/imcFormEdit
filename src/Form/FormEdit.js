@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { globalVariable } from "actions";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import { currentsetting } from "config/index.js";
 import { Tooltip, Modal, Row, Col, message } from "antd";
 import {
   SaveOutlined,
@@ -14,8 +13,6 @@ import {
 import PageHead from "components/Common/PageHeader";
 import AntFormBuild from "Form/AntFormBuild";
 import AntFormDisplay from "Form/AntFormDisplay";
-import _ from "lodash";
-import useForceUpdate from "use-force-update";
 import "components/Common/Antd.css";
 import IconButton from "@material-ui/core/IconButton";
 import ListGen from "components/SKD/ListGen";
@@ -24,7 +21,6 @@ import MoreMenu from "components/SKD/MoreMenu";
 const FormEdit = (props) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const forceUpdate = useForceUpdate();
 
   //for snackbar open/close
   const [visible, setVisible] = useState(false);
@@ -236,7 +232,6 @@ const FormEdit = (props) => {
       console.log("its same");
       return false;
     } else return true;
-    return false;
   };
   const updateForm = (newform, allValues) => {
     newform.data.setting.formItemLayout = {
@@ -368,7 +363,6 @@ const FormEdit = (props) => {
     </Row>
   );
 
-  const dataformat = ["_id", "data", "title", "desc", "type"];
   const selectHandler = (item) => {
     console.log("selected123", item, item.id);
     dispatch(globalVariable({ currentData: item }));
