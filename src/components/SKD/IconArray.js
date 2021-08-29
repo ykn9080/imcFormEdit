@@ -4,7 +4,6 @@ import { globalVariable } from "actions";
 import { useHistory } from "react-router-dom";
 import _ from "lodash";
 import $ from "jquery";
-import { makeStyles } from "@material-ui/core/styles";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -19,14 +18,6 @@ import Layout7 from "images/Layout/Layout7.png";
 import Layout8 from "images/Layout/Layout8.png";
 import { ObjectID } from "bson"; //_id maker for MongoDB
 
-const useStyles = makeStyles((theme) => ({
-  margin: {
-    margin: theme.spacing(1),
-  },
-  extendedIcon: {
-    marginRight: theme.spacing(0),
-  },
-}));
 const IconArray = () => {
   const layout = [
     { col: [1], repeat: 1 },
@@ -54,7 +45,6 @@ const IconArray = () => {
   };
   const handleClick = (event) => {
     const id = $(event.currentTarget).attr("aria-controls");
-    console.log(id, event.currentTarget);
     switch (id) {
       case "editMenu":
         setAnchorEl(event.currentTarget);
@@ -71,8 +61,6 @@ const IconArray = () => {
     setAnchorEl(null);
   };
   const handleClose1 = (num) => {
-    console.log(num);
-
     setLayoutIndex(num - 1);
     LayoutControl(layout[num - 1]);
     setAnchorEl1(null);
@@ -99,7 +87,7 @@ const IconArray = () => {
   };
   let addCtr = (seq, size) => {
     const id = new ObjectID();
-    console.log(id);
+
     return {
       _id: id,
       ctrid: "",
@@ -110,14 +98,12 @@ const IconArray = () => {
   };
   const handleAddControl = () => {
     const ctrLength = ctrList.length;
-    console.log(layoutIndex);
     const layObj = layout[layoutIndex];
     const ttl = _.sum(layObj.col) * layObj.repeat;
 
-    console.log(ctrLength, layObj, ttl);
     let seq = ctrLength;
     ctrList.push(addCtr(seq, findNthWidth(seq, layObj.col)));
-    console.log(ctrList);
+
     dispatch(globalVariable({ control: ctrList }));
     LayoutControl(layObj, ctrList);
   };
@@ -125,7 +111,7 @@ const IconArray = () => {
   const LayoutControl = (layObj, ctrl) => {
     if (typeof layObj === "undefined") return false;
     if (typeof ctrl != "undefined") ctrList = ctrl;
-    console.log(ctrList);
+
     // let unitwidth = 12 / _.sum(layObj.col);
     if (ctrList.length === 0) {
       //| isBlank()) {
@@ -148,7 +134,6 @@ const IconArray = () => {
         ctr.size = findNthWidth(j, layObj.col);
         return null;
       });
-      console.log(ctrList);
     }
 
     dispatch(globalVariable({ control: ctrList }));

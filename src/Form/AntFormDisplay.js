@@ -153,7 +153,7 @@ export const replaceListbyInitValues = (list, changedInitVals) => {
       k = { ...k, defaultValue: val };
       list.splice(i, 1, k);
     }
-    return;
+    return null;
   });
   return list;
 };
@@ -259,7 +259,6 @@ export const shouldUpdateCheck = (list, k) => {
 const AntFormDisplay = (props) => {
   let showall = false; //useSelector((state) => state.global.showall); //edit
   const [formArray, setFormArray] = useState();
-  const [formSummary, setFormSummary] = useState(null);
   const [loading] = useState(false);
   const [fset, setFset] = useState();
   const [list, setList] = useState();
@@ -329,13 +328,9 @@ const AntFormDisplay = (props) => {
       }, 200);
   };
   const settingup = (data) => {
-    if (props.patchlist) list = makePatchList(props.patchlist, list);
+    if (props.patchlist) setList(makePatchList(props.patchlist, list));
     setFormArray(data.data);
     makeFormArray(data.data);
-
-    let desc = "";
-    if (data.desc) desc = data.desc;
-    setFormSummary({ title: data.name, desc: desc });
   };
 
   const makePatchList = (patchlist, list) => {
@@ -397,7 +392,6 @@ const AntFormDisplay = (props) => {
       formColumn: 1,
       size: "middle",
     };
-   
 
     if (props.dropdownRender)
       setOthersetting({ dropdownRender: props.dropdownRender });
