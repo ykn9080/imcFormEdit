@@ -195,7 +195,7 @@ const FormEdit = (props) => {
         size: set.size,
         lineheight: set.lineheight,
       };
-      console.log(event.data);
+
       event.data.data.setting.initialValues = init;
       if (!set.formItemLayout) {
         set = {
