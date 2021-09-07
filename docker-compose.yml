@@ -5,9 +5,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: imcreactform
-    image: yknam/imcreactform
+    container_name: imcformedit
+    image: yknam/imcformedit
     volumes:
       - ./src:/app/src
     ports:
-      - "3081:80"
+      - "3080:80"
