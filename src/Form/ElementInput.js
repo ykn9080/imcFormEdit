@@ -124,9 +124,10 @@ const ElementInput = (props) => {
 
   const curr = useMemo(() => {
     let curr = cloneDeep(currentData);
+    if (!curr) curr = { data: { list: [], setting: {} } };
     let eleData = elementData;
     curr.data.list = [eleData];
-    curr.data.setting = currentData.data.setting;
+    curr.data.setting = currentData?.data?.setting | {};
     const lbl = localStorage.getItem("esetup_label");
     if (lbl) {
       $("#esetup_label").val(lbl);
@@ -142,6 +143,11 @@ const ElementInput = (props) => {
         helpLink: "/admin/control/form/formedit?type=elementedit",
       })
     );
+    if (!currentData) {
+      dispatch(
+        globalVariable({ currentData: { data: { list: [], setting: {} } } })
+      );
+    }
     setTimeout(() => {
       $("#esetup_name, #esetup_action").on("keyup change", function (e) {
         e.preventDefault();
