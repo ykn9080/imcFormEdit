@@ -48,7 +48,6 @@ export const MakeTabPanel1 = (data) => {
     data.list.map((k, i) => {
       if (k.seq >= maxseq) return (maxseq = k.seq + 1);
     });
-    console.log(maxseq);
     return maxseq;
   };
   const handleCreateNew = (type) => {

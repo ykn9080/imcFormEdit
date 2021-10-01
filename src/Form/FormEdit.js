@@ -220,16 +220,13 @@ const FormEdit = (props) => {
     if (checkisDiff()) {
       localStorage.setItem("currentData", JSON.stringify(newFormData));
       onReload();
-      console.log("diff");
     }
-    console.log("newFormData changed", newFormData);
     //   //if (newFormData._id) setUpdate(true);
   }, [newFormData]);
   const checkisDiff = () => {
     const currentData = localStorage.getItem("currentData");
     if (!currentData) return true;
     if (currentData === JSON.stringify(newFormData)) {
-      console.log("its same");
       return false;
     } else return true;
   };
@@ -364,7 +361,6 @@ const FormEdit = (props) => {
   );
 
   const selectHandler = (item) => {
-    console.log("selected123", item, item.id);
     dispatch(globalVariable({ currentData: item }));
 
     localStorage.setItem("currentData", JSON.stringify(item));
@@ -382,7 +378,6 @@ const FormEdit = (props) => {
     setConfirmLoading(false);
   };
   const settingSave = () => {
-    console.log(localStorage.getItem("apiupdate"));
     setApiurl(localStorage.getItem("apiupdate"));
     localStorage.removeItem("apiupdate");
     setSetting(false);

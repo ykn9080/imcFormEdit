@@ -49,7 +49,6 @@ const FormList = () => {
         setListData(imsiData1);
 
         dispatch(globalVariable({ listData: imsiData1 }));
-        console.log(listData);
         setLoading(false);
       });
   }, []);
@@ -72,12 +71,9 @@ const FormList = () => {
       url: `${currentsetting.webserviceprefix}bootform/${item._id}`,
     };
     axios(config).then((r) => {
-      console.log(r);
-      console.log(listData);
       _.remove(listData, function (currentObject) {
         return currentObject._id === item._id;
       });
-      console.log(listData);
       setListData(listData);
       localStorage.removeItem("imsi");
       dispatch(globalVariable({ currentData: "" }));

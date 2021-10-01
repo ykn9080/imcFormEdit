@@ -54,19 +54,6 @@ const ColorAnt = (props) => {
   const [show, setShow] = useState();
   const [selcolor, setSelcolor] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
-  //   console.log(blue); // ['#E6F7FF', '#BAE7FF', '#91D5FF', ''#69C0FF', '#40A9FF', '#1890FF', '#096DD9', '#0050B3', '#003A8C', '#002766']
-  //   console.log(blue.primary);
-  //   let colors = generate("#bfbfbf");
-  //   console.log(colors); // ['#E6F7FF', '#BAE7FF', '#91D5FF', ''#69C0FF', '#40A9FF', '#1890FF', '#096DD9', '#0050B3', '#003A8C', '#002766']
-  //   console.log(presetPalettes);
-
-  //   // Generate dark color palettes by a given color
-  //   let colors1 = generate("#1890ff", {
-  //     theme: "dark",
-  //     backgroundColor: "#141414",
-  //   });
-  //   console.log(colors1); // ["#111d2c", "#112a45", "#15395b", "#164c7e", "#1765ad", "#177ddc", "#3993dc", "#65b7f3", "#8bcbf3", "#b2dcf3"]
-  //   console.log(presetDarkPalettes);
 
   const selectChange = (val) => {
     if (val === "single") setShow(false);
@@ -84,11 +71,8 @@ const ColorAnt = (props) => {
       const nextSelectedTags = checked
         ? [...selectedTags, tag]
         : selectedTags.filter((t) => t !== tag);
-      //console.log('You are interested in: ', nextSelectedTags);
       setSelectedTags(nextSelectedTags);
-      //setSelcolor(nextSelectedTags);
     };
-    console.log(props.colors, props);
     return props.colors.map((tag) => (
       <CheckableTag
         key={tag}
@@ -103,7 +87,6 @@ const ColorAnt = (props) => {
   };
   const ColorMenu = (props) => {
     function handleMenuClick(e) {
-      console.log("click", e.key, e.item.props.style.backgroundColor);
       if (props.type === "multi") setSelcolor(MixColors(e.key));
       else setSelcolor(generate(e.item.props.style.backgroundColor));
     }
@@ -136,7 +119,6 @@ const ColorAnt = (props) => {
     console.log(val);
   };
   const btnSelect = (type) => {
-    console.log(selcolor, selectedTags);
     let newsel = [...selcolor];
     if (type === "reverse") newsel = _.reverse(newsel);
     const newcolor = selectedTags.concat(newsel);

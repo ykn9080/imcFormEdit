@@ -126,6 +126,9 @@ const AntFormBuild = (props) => {
     //st>ed -> st prev +1 st->ed
   };
   useEffect(() => {
+    localStorage.removeItem("formscript");
+  }, []);
+  useEffect(() => {
     if (props.formdt.data) {
       setFormArray(props.formdt.data);
       setScriptInit(JSON.stringify(props.formdt.data, null, 4));
@@ -436,7 +439,36 @@ const AntFormBuild = (props) => {
       .writeText(scriptInit)
       .then(message.info("Copied to clipboard"));
   };
+  const applyChange = () => {
+    let script,
+      script1 = localStorage.getItem("formscript");
 
+    if (script1) {
+      try {
+        script = JSON.parse(script1);
+        console.log(script);
+        setFormArray(script);
+        const newscript = { ...script };
+        setScriptInit({ script: JSON.stringify(newscript, null, 4) });
+        //localStorage.removeItem("formscript");
+      } catch (e) {
+        console.log(e);
+        message.error(e.message);
+      }
+    } else {
+      message.error("No data available!");
+    }
+  };
+  const onValuesScript = (changedValues, allValues) => {
+    let script = changedValues.script;
+    try {
+      script = JSON.parse(changedValues.script);
+      localStorage.setItem("formscript", JSON.stringify(script));
+    } catch (e) {
+      console.log(e);
+      message.error(e.message);
+    }
+  };
   return (
     <div className={classes.root}>
       <Tabs defaultActiveKey="1">
@@ -470,12 +502,17 @@ const AntFormBuild = (props) => {
                   formColumn: 1,
                 },
               }}
-              // onValuesChange={onValuesChangeParamter}
+              onValuesChange={onValuesScript}
               initialValues={{ script: scriptInit }}
             />
             <Tooltip title="Copy code to clipboard">
               <Button key="copy" onClick={copyClipboard}>
                 Copy
+              </Button>
+            </Tooltip>
+            <Tooltip title="Apply Change">
+              <Button key="copy" onClick={applyChange}>
+                Apply
               </Button>
             </Tooltip>
           </>{" "}
@@ -513,13 +550,6 @@ const AntFormBuild = (props) => {
           />
         </Popup>
       </DialogSelect>
-      <Button
-        onClick={() => {
-          console.log(scriptInit);
-        }}
-      >
-        scriptinit
-      </Button>
     </div>
   );
 };

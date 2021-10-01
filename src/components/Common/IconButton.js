@@ -14,12 +14,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const IconBtn = (props) => {
-  //props={tooltip""this is deete", children: < DeleteIcon />,  handleClick: ()=>console.log('hhh')
-  //, color:primary,secondary,default,inherit,transparant, aria-label:"screen reader only label", aria-controls:"main" }
-  //Example
-  // <IconBtn tooltip="this is example" handleClick={() => history.push("/")} color="primary" >
-  //   <HomeIcon />;
-  // </IconBtn>
   const classes = useStyles();
   React.useEffect(() => {
     const node = loadCSS(

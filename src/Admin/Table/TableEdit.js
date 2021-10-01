@@ -65,7 +65,6 @@ const TableEdit = (props) => {
   //   formdt = JSON.parse(localStorage.getItem("imsi"));
   //   dispatch(globalVariable({ currentData: formdt }));
   // }
-  console.log("formdt", formdt);
   let initialValue = {};
 
   let summaryData = {
@@ -223,7 +222,6 @@ const TableEdit = (props) => {
         shape="circle"
         icon={<SaveOutlined {...iconSpin} />}
         onClick={() => {
-          console.log(sumdt, formdt._id);
           message.config({
             top: 100,
             duration: 3,

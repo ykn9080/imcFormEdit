@@ -5,7 +5,6 @@ import { Tag, Typography } from "antd";
 const { Text, Title } = Typography;
 
 const ViewHead = (props) => {
-  console.log(props.initialValues);
   let init;
   if (props?.initialValues) init = props.initialValues;
 
@@ -18,7 +17,6 @@ const ViewHead = (props) => {
 };
 
 export const ViewTail = (props) => {
-  console.log(props.initialValues);
   let tags = [];
   if (props?.initialValues?.tag) tags = props.initialValues.tag;
   return (
